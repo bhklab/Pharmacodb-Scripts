@@ -72,7 +72,14 @@ def duplicateCellLines(filename):
             for row in cellosaurus_cell_line:
                 sy = row['sy'].split('; ')
                 total_number = total_number + 1
-                if((row['identifier'] == data) or (data in sy)):
+                #comment if stament and break and elif and uncomment
+                #if statement in order to get all the replicates
+                #else we can get the needed replicates which are just replicated
+                #in 'sy' but not in the cell id.
+                if(row['identifier'] == data):
+                    break
+                elif((data in sy)):
+                #if((row['identifier'] == data) or (data in sy)):
                     replicates = replicates + 1
                 elif(total_number == cellosaurus_cell_line.__len__()):
                     if(replicates > 1):
