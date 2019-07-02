@@ -47,7 +47,7 @@ def writeFileCellosauruss(filename):
             for row in cellosaurus_cell_line:
                 sy = row['sy'].split('; ')
                 total_number = total_number + 1
-                if(row['identifier'] == data):
+                if(row['identifier'] == data or (row['identifier'].replace(' ','')) == data):
                     csv_writer.writerow([row['accession'], pharmacodb_id, data])
                     break
                 elif(total_number == cellosaurus_cell_line.__len__() and data in sy):
@@ -94,8 +94,8 @@ for entry in glob('input_files/*.csv'):
     
 
 # calling write function.
-#writeFileCellosauruss(output_file_cellosaurus)
+writeFileCellosauruss(output_file_cellosaurus)
 
 
 # calling function to find duplicates.
-duplicateCellLines(output_file_duplicate)
+#duplicateCellLines(output_file_duplicate)
