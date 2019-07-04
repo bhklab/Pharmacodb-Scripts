@@ -41,7 +41,7 @@ def writeFileCellosauruss(filename):
         csv_writer.writerow(['cellosaurus_ac', 'pharmacodb_id', 'cell_line'])
         for row in pharmacodb_cell_line:
             data = row.split('_')[0]
-            pharmacodb_id = row.replace('-','')
+            pharmacodb_id = row.replace('-','').replace(' ','')
             accession_id = ''
             total_number = 0
             for row in cellosaurus_cell_line:
