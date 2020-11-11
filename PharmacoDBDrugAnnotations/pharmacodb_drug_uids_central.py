@@ -1,5 +1,7 @@
+"""
+This file is used to create the UIDs for compounds that are present in the central file.
+"""
 import csv
-import re
 
 # input and output file variables.
 inputFile = 'drugs_with_ids.csv'

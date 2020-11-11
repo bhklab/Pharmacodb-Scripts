@@ -1,9 +1,11 @@
+"""
+This file is used to create the UIDs for compounds that are present in PharmacoDB.
+"""
 import csv
-import re
 
 # input and output file variables.
 inputFile = 'drugs.csv'
-outputFile = 'drugsUID.csv'
+outputFile = 'drugsUIDLocal.csv'
 ACRONYM = 'PDBC'
 
 # try catch block for reading and writing to the file.
