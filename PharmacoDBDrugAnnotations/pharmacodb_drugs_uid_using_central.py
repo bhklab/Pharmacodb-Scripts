@@ -1,7 +1,11 @@
 """
 This file is used to create the UIDs for compounds that are present in PharmacoDB
 using the UIDs created/present in the drugsUIDCentral.csv file.
+Note: Nelfivir is mapped using the drug name Nelfinavir
+      and Lisitinib to Linsitinib. These both are mapped manually.
+      Also replace OSI-906 with 'NA'.
 """
+
 import csv
 
 # input and output file variables.
@@ -58,11 +62,13 @@ try:
                     last = line[4].replace('\n', '')
                     csv_writer.writerow(
                         [line[0], line[1], drug_uid, line[2], line[3], last])
-                elif drug.capitalize() in drug_uid_mapping:
+                elif line[0] != 'drug_id' and drug.capitalize() in drug_uid_mapping:
                     drug_uid = drug_uid_mapping[drug.capitalize()]
                     csv_writer.writerow(
                         [line[0], line[1], drug_uid, line[2], line[3], last])
-                else:
+                elif line[0] != 'drug_id':
+                    csv_writer.writerow(
+                        [line[0], line[1], 'NA', line[2], line[3], last])
                     print('This compound was not mapped!', line[1])
 except:
     print('Something went wrong!!')
