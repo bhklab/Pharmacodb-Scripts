@@ -18,6 +18,10 @@ drug_uid_mapping = {}
 # column number/index that have to be mapped.
 column = [1, 3, 5, 6, 8, 10, 11, 12, 14, 16, 20, 21]
 
+# header for the new file.
+header = ['drug_id', 'drug_name', 'drug_uid',
+          'fda_status', 'created_at', 'updated_at']
+
 
 # function to do the mapping.
 def map_drug_to_uid(i, line):
@@ -43,13 +47,12 @@ try:
         with open(output_file, 'w') as output:
             csv_writer = csv.writer(output, delimiter=',')
             # header for the output file.
-            csv_writer.writerow(['drug_id', 'drug_name', 'drug_uid',
-                                 'fda_status', 'created_at', 'updated_at'])
+            csv_writer.writerow(header)
             # looping through each line in the file
             # and appending the result to new file.
             for line in input_drugs:
                 line = line.split(';')
-                drug = line[1].replace('"', '')
+                drug = line[1].replace('"', '').strip()
                 if line[0] != 'drug_id' and drug in drug_uid_mapping:
                     drug_uid = drug_uid_mapping[drug]
                     csv_writer.writerow(
@@ -59,7 +62,7 @@ try:
                     csv_writer.writerow(
                         [line[0], line[1], drug_uid, line[2], line[3], line[4].replace('\n', '')])
                 else:
-                    print(line[1])
+                    print('This compound was not mapped!', line[1])
 except:
     print('Something went wrong!!')
     raise
