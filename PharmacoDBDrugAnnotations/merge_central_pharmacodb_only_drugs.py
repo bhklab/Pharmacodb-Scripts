@@ -19,8 +19,10 @@ drug_uid_mapping = {}
 try:
     with open(pharmacodb_input_drugs, 'r') as pharmacodb:
         for line in csv.reader(pharmacodb):
-            drug_uid_mapping[line[2]] = line[1]
-    print(drug_uid_mapping)
+            if line[2] not in drug_uid_mapping:
+                drug_uid_mapping[line[2]] = line[1]
+            else:
+                print(line[2], line[1], drug_uid_mapping[line[2]])
 
     with open(main_input_drugs, 'r') as input:
         with open(output_file, 'w') as output:
