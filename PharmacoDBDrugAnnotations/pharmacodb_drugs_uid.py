@@ -1,5 +1,6 @@
 """
-This file is used to create the UIDs for compounds that are present in PharmacoDB.
+Note: Not being used for creating the UIDs for compounds that that are present in PharmacoDB.
+Use file pharmacodb_drugs_uid_using_central.py for it.
 """
 import csv
 
