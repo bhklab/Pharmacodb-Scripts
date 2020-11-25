@@ -19,8 +19,14 @@ output_file = "drugsUID.csv"
 # dictionary to store the drug and uid mapping.
 drug_uid_mapping = {}
 
+# dictionary to map unique.drugid and PharmacoDB.uid.
+drug_unique_id_mapping = {}
+
+# list to maintained already used PharmacoDB.uids.
+pharmacodb_uids = []
+
 # column number/index that have to be mapped.
-column = [1, 3, 5, 6, 8, 10, 11, 12, 14, 16, 20, 21]
+column = [3, 5, 6, 8, 10, 11, 12, 14, 16, 20, 21]
 
 # header for the new file.
 header = ['drug_id', 'drug_name', 'drug_uid',
@@ -43,6 +49,8 @@ try:
     # puts the drugs from several datasets in the mapping.
     with open(main_input_drugs, 'r') as input:
         for line in csv.reader(input):
+            # mapping unique ids to pharmacodb uids.
+            drug_unique_id_mapping[line[1]] = line[-1]
             for i in column:
                 map_drug_to_uid(i, line)
 
@@ -50,26 +58,37 @@ try:
     with open(pharmacodb_input_drugs, 'r') as input_drugs:
         with open(output_file, 'w') as output:
             csv_writer = csv.writer(output, delimiter=',', quotechar="'")
-            # header for the output file.
-            csv_writer.writerow(header)
             # looping through each line in the file
             # and appending the result to new file.
             for line in input_drugs:
                 line = line.split(';')
                 drug = line[1].replace('"', '').strip()
-                if line[0] != 'drug_id' and drug in drug_uid_mapping:
+                drug_uid = ''
+                last = last = line[4].replace('\n', '')
+                if line[0] == 'drug_id':
+                    drug_uid = 'drug_uid'
+                elif drug in drug_unique_id_mapping:
+                    drug_uid = drug_unique_id_mapping[drug]
+                    pharmacodb_uids.append(drug_uid)
+                elif drug.capitalize() in drug_unique_id_mapping:
+                    drug_uid = drug_unique_id_mapping[drug.capitalize()]
+                    pharmacodb_uids.append(drug_uid)
+                elif drug in drug_uid_mapping:
                     drug_uid = drug_uid_mapping[drug]
-                    last = line[4].replace('\n', '')
-                    csv_writer.writerow(
-                        [line[0], line[1], drug_uid, line[2], line[3], last])
-                elif line[0] != 'drug_id' and drug.capitalize() in drug_uid_mapping:
+                    if(drug_uid in pharmacodb_uids):
+                        drug_uid = drug_uid + '-R'
+                    pharmacodb_uids.append(drug_uid)
+                elif drug.capitalize() in drug_uid_mapping:
                     drug_uid = drug_uid_mapping[drug.capitalize()]
-                    csv_writer.writerow(
-                        [line[0], line[1], drug_uid, line[2], line[3], last])
-                elif line[0] != 'drug_id':
-                    csv_writer.writerow(
-                        [line[0], line[1], 'NA', line[2], line[3], last])
+                    if(drug_uid in pharmacodb_uids):
+                        drug_uid = drug_uid + '-R'
+                    pharmacodb_uids.append(drug_uid)
+                else:
                     print('This compound was not mapped!', line[1])
+                    drug_uid = 'NA'
+                csv_writer.writerow(
+                    [line[0], line[1], drug_uid, line[2], line[3], last])
+
 except:
     print('Something went wrong!!')
     raise
